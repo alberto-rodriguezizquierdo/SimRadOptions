@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<generalParameters>
+  <data>
+    <dataPath>C:/Users/David/Desktop/SimRADoptions/data</dataPath>
+    <genome>VITVvi_vCabSauv08_v1.1.fasta</genome>
+    <enzyme_db>enzymeDb.rda</enzyme_db>
+  </data>
+
+  <parameters>
+    <min.size>200</min.size>
+    <max.size>260</max.size>
+  </parameters>
+  <output>
+    <outputDir>C:/Users/David/Desktop/SimRADoptions/output</outputDir>
+  </output>
+</generalParameters>
