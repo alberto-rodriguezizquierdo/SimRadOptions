@@ -28,6 +28,5 @@ for (rscripts in listFiles){
   source(paste0(myDirectoryR,rscripts))
 }
 
-#noiseqApp(root)
+
 debug(SimRADoptionsApp(root))
-#loadingScripts   <- source(myDirectoryR,)

@@ -11,6 +11,6 @@
     <max.size>260</max.size>
   </parameters>
   <output>
-    <outputDir>C:/Users/David/Desktop/SimRADoptions/output</outputDir>
+    <outputDir>restriction</outputDir>
   </output>
 </generalParameters>

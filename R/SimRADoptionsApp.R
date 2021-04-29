@@ -1,9 +1,9 @@
-#' @name simRADoptions
+#' @name SimRADoptionsApp
 #' @param root
 #' @import dplyr, SimRAD, seqinr, XML
 #' @author Alberto Rodriguez-Izquierdo, 2021
 
-RNASeqAnalysisApp <- function(root){
+SimRADoptionsApp <- function(root){
 
 
 #  library(logging)
@@ -17,7 +17,7 @@ RNASeqAnalysisApp <- function(root){
   resultsRestriction <- restrictionSimulation(configFile)
   
   
-  outputGeneration(resultsRestriction, configFile)
+  outputGeneration(resultsRestriction,root, configFile)
   
   ####---------------------output-------------------####
 
