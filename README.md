@@ -7,7 +7,7 @@ SimRADOptions is a little package to find the best restriction enzyme (in a sele
 #Requirements
 
 - R environment 4.0.2 and Bioconductor Software
-- < 8 GB RAM
+- > 8 GB RAM
 - Whole Genome of an organism (in FASTA format)
 
 #How to use SimRADOptions
