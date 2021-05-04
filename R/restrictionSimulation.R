@@ -5,6 +5,8 @@
 
 restrictionSimulation <- function(configFile){
   
+  #defining parameters
+  
   dnaseq      <- paste0(configFile$data$dataPath,'/',configFile$data$genome)#'C:/Users/David/Downloads/VITVvi_vCabSauv08_v1.1.fasta'
   
   load(file = paste0(configFile$data$dataPath,'/',configFile$data$enzyme_db))
@@ -14,6 +16,8 @@ restrictionSimulation <- function(configFile){
   min.size    <- configFile$param$min.size
   
   max.size    <- configFile$param$max.size
+  
+  #Starting restriction simulation
   
   for (enzymes in 1:nrow(enzyme.db)){
   
@@ -25,8 +29,14 @@ restrictionSimulation <- function(configFile){
       
     eval(parse(text=paste0('size.select',row$enzyme,' <- size.select (simseq', row$enzyme,'.dig,min.size = min.size, max.size = max.size, graph = FALSE, verbose= TRUE)'))) 
     
-    eval(parse(text=paste0('graph_generator(simseq',row$enzyme,'.dig, row$enzyme, min.size, max.size, configFile)')))
-    browser()
+    if (eval(parse(text=paste0('!length(size.select', row$enzyme,') == 0')))){
+      
+      eval(parse(text=paste0('graph_generator(simseq',row$enzyme,'.dig, row$enzyme, min.size, max.size, configFile)')))
+      
+    }
+    
+    #building exiting file
+    
     if (!exists('results')){
       
       #rm(list=ls())
@@ -56,12 +66,18 @@ restrictionSimulation <- function(configFile){
       results1 <- cbind (results1, Sel_digestions_count)
       
       results <- rbind (results, results1)
-      }
       
+    }
+    
+    #cleaning memory
+    
+    eval(parse(text=paste0('rm(simseq',row$enzyme,'.dig)')))
+    
+    eval(parse(text=paste0('rm(size.select', row$enzyme,')')))
   }
-  
-  results[order(-results$Sel_digestions_count)]
-  
+
+  results[order(-results$Sel_digestions_count),]
+
   return(results)
 }
 
@@ -73,7 +89,7 @@ restrictionSimulation <- function(configFile){
 #' @param max.size
 
 graph_generator <- function(sequences, name_enzyme, min.size, max.size, configFile){
-  browser()
+  
   ssel <- sequences[width(sequences) < max.size & width(sequences) > min.size]
 
   dirOutput <- paste0(root,'output/',configFile$output$outputDir,'/', name_enzyme)

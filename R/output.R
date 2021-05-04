@@ -10,7 +10,7 @@
 
 outputGeneration <- function(results,root, configFile){
   
-  dirOutput         <- paste0(root, 'output/',configFile$output$outputDir)
+  dirOutput         <- paste0(root, 'output/results/')
   
   if (!dir.exists(dirOutput)){
 
@@ -24,7 +24,7 @@ outputGeneration <- function(results,root, configFile){
 
   }
   
-  write.table(results, file=dirOutput, sep=';')
+  write.table(results, file=paste0(dirOutput, 'results_RE.csv'), sep=';')
 
 
 }
