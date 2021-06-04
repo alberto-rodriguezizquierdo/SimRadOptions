@@ -47,13 +47,23 @@ getConfigFile <- function(root){
   
   ###----------------------Validation parameters---------------###
 
-  validateMinSize                     <- validateNumber(configFile$parameters$min.size)
-
-  configFile$parameters$min.size      <- validateMinSize
-
-  validateMaxSize                     <- validateNumber(configFile$parameters$max.size)
+  validateUseCombination                             <- validateCharacter(configFile$parameters$combination$use_combination)
   
-  configFile$parameters$max.size      <- validateMaxSize
+  configFile$parameters$combination$use_combination  <- validateUseCombination
+  
+  validateEnzymeSelection                            <- validateCharacter(configFile$parameters$combination$enzyme_selection)
+  
+  validateEnzymeSelection                            <- unlist(strsplit(validateEnzymeSelection, ','))
+  
+  configFile$parameters$combination$enzyme_selection <- validateEnzymeSelection
+  
+  validateMinSize                                    <- validateNumber(configFile$parameters$min.size)
+
+  configFile$parameters$min.size                     <- validateMinSize
+
+  validateMaxSize                                    <- validateNumber(configFile$parameters$max.size)
+  
+  configFile$parameters$max.size                     <- validateMaxSize
   
   ###-----------------------Validate Output--------------------###
   
@@ -114,7 +124,9 @@ nodesValidation <- function(configFile){
 
   dataNodes                   <- c('dataPath','genome', 'enzyme_db')
 
-  parametersNodes             <- c('max.size', 'min.size')
+  parametersNodes             <- c('combination','max.size', 'min.size')
+  
+  combinationNodes            <- c('use_combination', 'enzyme_selection')
 
   outputNodes                 <- c('outputDir')
 
@@ -126,6 +138,8 @@ nodesValidation <- function(configFile){
 
   ValParametersNodes            <- validateConfigNodes(parametersNodes, configFile$parameters)
 
+  ValCombinationNodes           <- validateConfigNodes(combinationNodes, configFile$parameters$combination)
+  
   ValOutputNodes                <- validateConfigNodes(outputNodes, configFile$output)
 
 

@@ -7,6 +7,10 @@
   </data>
 
   <parameters>
+    <combination>
+      <use_combination>TRUE</use_combination>
+      <enzyme_selection>Hin1II,EcoRI,HindIII,PstI,NsiI,NdeI,AflII</enzyme_selection>
+    </combination>
     <min.size>200</min.size>
     <max.size>260</max.size>
   </parameters>
