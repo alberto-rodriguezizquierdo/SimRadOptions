@@ -2,7 +2,7 @@
 
 rm(list=ls())
 
-libInstalling <- c('dplyr','XML','tidyverse', 'SimRAD', 'seqinr')
+libInstalling <- c('dplyr','XML','tidyverse', 'SimRAD', 'seqinr', 'data.table', 'phylotools')
 
 is.installed <- function(paquete) is.element(paquete, installed.packages())
 

@@ -18,14 +18,14 @@ restrictionSimulation <- function(configFile){
   max.size    <- configFile$param$max.size
   
   #Starting restriction simulation
-  if (!isTRUE(configFile$parameters$combination$use_combination)){
+  if (isTRUE(configFile$parameters$finding_enzyme$use_finding)){
     for (enzymes in 1:nrow(enzyme.db)){
       
       row <- enzyme.db[enzymes,]
       
       sequences <- as.character(row$restriction.site.sequences)
       
-      eval(parse(text=paste0('simseq', row$enzyme,'.dig <- insilico.digest(ref.DNAseq(dnaseq), cut_site_5prime1="', sequences,'", cut_site_3prime1="AC", verbose=TRUE)')))
+      eval(parse(text=paste0('simseq', row$enzyme,'.dig <- insilico.digest(ref.DNAseq(dnaseq), cut_site_5prime1="', sequences,'", cut_site_3prime1="", verbose=TRUE)')))
       
       eval(parse(text=paste0('size.select',row$enzyme,' <- size.select (simseq', row$enzyme,'.dig,min.size = min.size, max.size = max.size, graph = FALSE, verbose= TRUE)'))) 
       
@@ -79,7 +79,7 @@ restrictionSimulation <- function(configFile){
     results[order(-results$Sel_digestions_count),]
     
     
-  }else{
+  }else if(isTRUE(configFile$parameters$combination$use_combination)){
     
     for (x in configFile$parameters$combination$enzyme_selection){
       
@@ -172,9 +172,71 @@ restrictionSimulation <- function(configFile){
     
     results[order(-results$Sel_digestions_count),]
     
+  }else if (isTRUE(configFile$parameters$replicate_enzyme$use_replicate)){
+    
+    for(nrepeat in 1:configFile$parameters$replicate_enzyme$nb_repeat){
+      
+      enzymes <- configFile$parameters$replicate_enzyme$enzyme_selection
+      
+      row <- filter(enzyme.db, enzyme == enzymes)
+      
+      sequences <- as.character(row$restriction.site.sequences)
+      
+      eval(parse(text=paste0('simseq', row$enzyme,'.dig <- insilico.digest(ref.DNAseq(dnaseq), cut_site_5prime1="', sequences,'", cut_site_3prime1="", verbose=TRUE)')))
+      
+      eval(parse(text=paste0('size.select',row$enzyme,' <- size.select (simseq', row$enzyme,'.dig,min.size = min.size, max.size = max.size, graph = FALSE, verbose= TRUE)'))) 
+      
+      if (eval(parse(text=paste0('!length(size.select', row$enzyme,') == 0')))){
+        
+        eval(parse(text=paste0('graph_generator(simseq',row$enzyme,'.dig, row$enzyme, min.size, max.size, configFile)')))
+        
+      }
+      
+      #building exiting file
+      
+      if (!exists('results')){
+        
+        #rm(list=ls())
+        results <- data.frame(row)
+        
+        eval(parse(text=paste0('All_digestions_count <- length(simseq', row$enzyme,'.dig)')))
+        
+        eval(parse(text=paste0('Sel_digestions_count <- length(size.select', row$enzyme,')')))
+        
+        results <- cbind (results, All_digestions_count)
+        
+        results <- cbind (results, Sel_digestions_count)
+        
+        #eval(parse(text=paste0('results$Number_valid_Rest_fragments <- cbind(results, length(size.select',row$enzyme,'))'))) 
+        
+        
+      }else{
+        
+        results1 <- data.frame(row)
+        
+        eval(parse(text=paste0('All_digestions_count <- length(simseq', row$enzyme,'.dig)')))
+        
+        eval(parse(text=paste0('Sel_digestions_count <- length(size.select', row$enzyme,')')))
+        
+        results1 <- cbind (results1, All_digestions_count)
+        
+        results1 <- cbind (results1, Sel_digestions_count)
+        
+        results <- rbind (results, results1)
+        
+      }
+      
+      #cleaning memory
+      
+      eval(parse(text=paste0('rm(simseq',row$enzyme,'.dig)')))
+      
+      eval(parse(text=paste0('rm(size.select', row$enzyme,')')))
+    }
+    
+    results[order(-results$Sel_digestions_count),]
+    
     }
   
-
   return(results)
 }
 
@@ -238,9 +300,9 @@ graph_generator <- function(sequences, name_enzyme, min.size, max.size, configFi
   
   dev.off()
   
-
-  sequences_df <- data.frame(sequences)
+  
+  sequences_df <- data.frame(ssel)
   sequences_df$ID <- seq.int(nrow(sequences_df))
- 
-  write.fasta(as.list(sequences_df$sequences), sequences_df$ID, file.out=paste0(dirOutput, '/', name_enzyme, '.fasta'))
+  
+  write.fasta(as.list(sequences_df$ssel), sequences_df$ID, file.out=paste0(dirOutput, '/', name_enzyme, '.fasta'))
 }

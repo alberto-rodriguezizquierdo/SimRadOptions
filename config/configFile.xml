@@ -7,10 +7,23 @@
   </data>
 
   <parameters>
+    <finding_enzyme>
+      <use_finding>FALSE</use_finding>
+    </finding_enzyme>
     <combination>
-      <use_combination>TRUE</use_combination>
+      <use_combination>FALSE</use_combination>
       <enzyme_selection>Hin1II,EcoRI,HindIII,PstI,NsiI,NdeI,AflII</enzyme_selection>
     </combination>
+    <replicate_enzyme>
+      <use_replicate>TRUE</use_replicate>
+      <enzyme_selection>Hin1II</enzyme_selection>
+      <nb_repeat>10</nb_repeat>
+    </replicate_enzyme>
+    <random_genome_fragmentation>
+      <use_random>FALSE</use_random>
+      <nb_fragments>70000</nb_fragments>
+      <nb_repeat>10</nb_repeat>
+    </random_genome_fragmentation>
     <min.size>200</min.size>
     <max.size>260</max.size>
   </parameters>

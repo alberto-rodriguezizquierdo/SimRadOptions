@@ -22,7 +22,7 @@ getConfigFile <- function(root){
   #------------------Validation nodes----------------------#
 
   configFile <- nodesValidation(configFile)
-
+  
 
   ######--------------Validation nodes content --------------######
 
@@ -47,23 +47,51 @@ getConfigFile <- function(root){
   
   ###----------------------Validation parameters---------------###
 
-  validateUseCombination                             <- validateCharacter(configFile$parameters$combination$use_combination)
+  validateUseFinding                                                <- validateCharacter(configFile$parameters$finding_enzyme$use_finding)
+        
+  configFile$parameters$finding_enzyme$use_finding                  <- validateUseFinding
+        
+  validateUseCombination                                            <- validateCharacter(configFile$parameters$combination$use_combination)
+        
+  configFile$parameters$combination$use_combination                 <- validateUseCombination
+        
+  validateEnzymeSelection                                           <- validateCharacter(configFile$parameters$combination$enzyme_selection)
+        
+  validateEnzymeSelection                                           <- unlist(strsplit(validateEnzymeSelection, ','))
+        
+  configFile$parameters$combination$enzyme_selection                <- validateEnzymeSelection
+        
+  validateUseRepEnzyme                                              <- validateCharacter(configFile$parameters$replicate_enzyme$use_replicate)
   
-  configFile$parameters$combination$use_combination  <- validateUseCombination
+  configFile$parameters$replicate_enzyme$use_replicate              <- validateUseRepEnzyme
   
-  validateEnzymeSelection                            <- validateCharacter(configFile$parameters$combination$enzyme_selection)
+  validateRepEnzymeSel                                              <- validateCharacter(configFile$parameters$replicate_enzyme$enzyme_selection)
   
-  validateEnzymeSelection                            <- unlist(strsplit(validateEnzymeSelection, ','))
+  configFile$parameters$replicate_enzyme$enzyme_selection           <- validateRepEnzymeSel
   
-  configFile$parameters$combination$enzyme_selection <- validateEnzymeSelection
+  validateRepEnzymeNb                                               <- validateNumber(configFile$parameters$replicate_enzyme$nb_repeat)
   
-  validateMinSize                                    <- validateNumber(configFile$parameters$min.size)
-
-  configFile$parameters$min.size                     <- validateMinSize
-
-  validateMaxSize                                    <- validateNumber(configFile$parameters$max.size)
+  configFile$parameters$replicate_enzyme$nb_repeat                  <- validateRepEnzymeNb
   
-  configFile$parameters$max.size                     <- validateMaxSize
+  validateRandomUse                                                 <- validateCharacter(configFile$parameters$random_genome_fragmentation$use_random)
+  
+  configFile$parameters$random_genome_fragmentation$use_random      <- validateRandomUse
+  
+  validateRandomNb                                                  <- validateNumber(configFile$parameters$random_genome_fragmentation$nb_fragments)
+  
+  configFile$parameters$random_genome_fragmentation$nb_fragments    <- validateRandomNb
+  
+  validateRandomRepe                                                <- validateNumber(configFile$parameters$random_genome_fragmentation$nb_repeat)
+  
+  configFile$parameters$random_genome_fragmentation$nb_repeat       <- validateRandomRepe
+  
+  validateMinSize                                                   <- validateNumber(configFile$parameters$min.size)
+                
+  configFile$parameters$min.size                                    <- validateMinSize
+                
+  validateMaxSize                                                   <- validateNumber(configFile$parameters$max.size)
+                  
+  configFile$parameters$max.size                                    <- validateMaxSize
   
   ###-----------------------Validate Output--------------------###
   
@@ -119,14 +147,25 @@ readConfigFile <- function(root){
 nodesValidation <- function(configFile){
 
   #Building list with principal and secondary nodes for validation
-
+  
   principalNodes              <- c('data','parameters','output')
 
   dataNodes                   <- c('dataPath','genome', 'enzyme_db')
 
-  parametersNodes             <- c('combination','max.size', 'min.size')
+  parametersNodes             <- c('finding_enzyme',
+                                   'combination',
+                                   'replicate_enzyme',
+                                   'random_genome_fragmentation',
+                                   'max.size', 
+                                   'min.size')
+  
+  findingNodes                <- c('use_finding')
   
   combinationNodes            <- c('use_combination', 'enzyme_selection')
+  
+  replicateNodes              <- c('use_replicate', 'enzyme_selection', 'nb_repeat')
+  
+  randomGenNodes              <- c('use_random', 'nb_fragments', 'nb_repeat')
 
   outputNodes                 <- c('outputDir')
 
@@ -137,8 +176,14 @@ nodesValidation <- function(configFile){
   ValDataNodes                  <- validateConfigNodes(dataNodes, configFile$data)
 
   ValParametersNodes            <- validateConfigNodes(parametersNodes, configFile$parameters)
+  
+  ValfindingNodes               <- validateConfigNodes(findingNodes, configFile$parameters$finding_enzyme)
 
   ValCombinationNodes           <- validateConfigNodes(combinationNodes, configFile$parameters$combination)
+  
+  ValReplicateNodes             <- validateConfigNodes(replicateNodes, configFile$parameters$replicate_enzyme)
+  
+  valRandomGenNodes             <- validateConfigNodes(randomGenNodes, configFile$parameters$random_genome_fragmentation)
   
   ValOutputNodes                <- validateConfigNodes(outputNodes, configFile$output)
 
@@ -162,7 +207,7 @@ nodesValidation <- function(configFile){
 
 
 validateConfigNodes <- function (nodes, configFile){
-
+  
   if (!is.list(nodes)){
     for (x in nodes){
       if (!(x %in% names(configFile))){
