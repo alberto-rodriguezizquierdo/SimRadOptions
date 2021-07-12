@@ -85,6 +85,26 @@ getConfigFile <- function(root){
   
   configFile$parameters$random_genome_fragmentation$nb_repeat       <- validateRandomRepe
   
+  validateUseCalculate                                              <- validateCharacter(configFile$parameters$calculatePosition$use_calculate)
+  
+  configFile$parameters$calculatePosition$use_calculate             <- validateUseCalculate
+  
+  validateAlignmentPath                                             <- validateCharacter(configFile$parameters$calculatePosition$alignment_path)
+  
+  configFile$parameters$calculatePosition$alignment_path            <- validateAlignmentPath
+  
+  validateGffFile                                                   <- validateCharacter(configFile$parameters$calculatePosition$gffFile)
+  
+  configFile$parameters$calculatePosition$gffFile                   <- validateGffFile
+  
+  validateOutputPath                                                <- validateCharacter(configFile$parameters$calculatePosition$outputPath)
+  
+  configFile$parameters$calculatePosition$outputPath                <- validateOutputPath
+
+  validateCategory                                                  <- validateCharacter(configFile$parameters$calculatePosition$category)
+  
+  configFile$parameters$calculatePosition$category                  <- validateCategory
+
   validateMinSize                                                   <- validateNumber(configFile$parameters$min.size)
                 
   configFile$parameters$min.size                                    <- validateMinSize
@@ -156,6 +176,7 @@ nodesValidation <- function(configFile){
                                    'combination',
                                    'replicate_enzyme',
                                    'random_genome_fragmentation',
+                                   'calculatePosition',
                                    'max.size', 
                                    'min.size')
   
@@ -166,6 +187,8 @@ nodesValidation <- function(configFile){
   replicateNodes              <- c('use_replicate', 'enzyme_selection', 'nb_repeat')
   
   randomGenNodes              <- c('use_random', 'nb_fragments', 'nb_repeat')
+  
+  calculatePositionNodes      <- c('use_calculate','alignment_path','gffFile','outputPath', 'category')
 
   outputNodes                 <- c('outputDir')
 
@@ -184,6 +207,8 @@ nodesValidation <- function(configFile){
   ValReplicateNodes             <- validateConfigNodes(replicateNodes, configFile$parameters$replicate_enzyme)
   
   valRandomGenNodes             <- validateConfigNodes(randomGenNodes, configFile$parameters$random_genome_fragmentation)
+  
+  valCalculatePositionNodes     <- validateConfigNodes(calculatePositionNodes, configFile$parameters$calculatePosition)
   
   ValOutputNodes                <- validateConfigNodes(outputNodes, configFile$output)
 

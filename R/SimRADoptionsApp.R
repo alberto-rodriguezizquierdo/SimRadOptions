@@ -43,6 +43,15 @@ SimRADoptionsApp <- function(root){
     
   }
   
+  if(isTRUE(configFile$parameters$calculatePosition$use_calculate)){
+    
+    calculatePositionFragment(count_dir=configFile$parameters$calculatePosition$outputPath,
+                              alignment_path=configFile$parameters$calculatePosition$alignment_path,
+                              gffPath=configFile$parameters$calculatePosition$gffFile,
+                              category=configFile$parameters$calculatePosition$category)
+    
+  }
+  
   ########---------------Processing data------------------########
 
   resultsRestriction <- restrictionSimulation(configFile)

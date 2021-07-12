@@ -188,7 +188,7 @@ restrictionSimulation <- function(configFile){
       
       if (eval(parse(text=paste0('!length(size.select', row$enzyme,') == 0')))){
         
-        eval(parse(text=paste0('graph_generator(simseq',row$enzyme,'.dig, row$enzyme, min.size, max.size, configFile)')))
+        eval(parse(text=paste0('graph_generator(simseq',row$enzyme,'.dig, row$enzyme, min.size, max.size, configFile, nrepeat)')))
         
       }
       
@@ -247,7 +247,13 @@ restrictionSimulation <- function(configFile){
 #' @param min.size
 #' @param max.size
 
-graph_generator <- function(sequences, name_enzyme, min.size, max.size, configFile){
+graph_generator <- function(sequences, name_enzyme, min.size, max.size, configFile, nrepeat){
+  
+  if (!exists('nrepeat')){
+    
+    nrepeat <- NULL
+    
+  }
   
   ssel <- sequences[width(sequences) < max.size & width(sequences) > min.size]
 
@@ -263,7 +269,9 @@ graph_generator <- function(sequences, name_enzyme, min.size, max.size, configFi
     
     dir.create(dirOutput)
     
-  }else{
+  }
+  
+  if(!isTRUE(configFile$parameters$replicate_enzyme$use_replicate)){
     
     unlink(dirOutput, recursive = TRUE)
     
@@ -271,7 +279,7 @@ graph_generator <- function(sequences, name_enzyme, min.size, max.size, configFi
     
   }
   
-  tiff(filename=paste0(dirOutput, '/', name_enzyme,'_histogram.tiff'), units= 'in', width=5, height= 5, res=300)
+  tiff(filename=paste0(dirOutput, '/', name_enzyme,nrepeat,'_histogram.tiff'), units= 'in', width=5, height= 5, res=300)
   
   bk <- hist(width(sequences), breaks = length(sequences)/20, 
              plot = FALSE)$breaks
@@ -304,5 +312,5 @@ graph_generator <- function(sequences, name_enzyme, min.size, max.size, configFi
   sequences_df <- data.frame(ssel)
   sequences_df$ID <- seq.int(nrow(sequences_df))
   
-  write.fasta(as.list(sequences_df$ssel), sequences_df$ID, file.out=paste0(dirOutput, '/', name_enzyme, '.fasta'))
+  write.fasta(as.list(sequences_df$ssel), sequences_df$ID, file.out=paste0(dirOutput, '/', name_enzyme,nrepeat, '.fasta'))
 }
