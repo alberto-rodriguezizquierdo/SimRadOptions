@@ -11,12 +11,12 @@
       <use_finding>FALSE</use_finding>
     </finding_enzyme>
     <combination>
-      <use_combination>FALSE</use_combination>
-      <enzyme_selection>Hin1II,EcoRI,HindIII,PstI,NsiI,NdeI,AflII</enzyme_selection>
+      <use_combination>TRUE</use_combination>
+      <enzyme_selection>NsiI,Csp6I</enzyme_selection>
     </combination>
     <replicate_enzyme>
       <use_replicate>FALSE</use_replicate>
-      <enzyme_selection>Hin1II</enzyme_selection>
+      <enzyme_selection>NsiI</enzyme_selection>
       <nb_repeat>10</nb_repeat>
     </replicate_enzyme>
     <random_genome_fragmentation>
@@ -25,7 +25,7 @@
       <nb_repeat>10</nb_repeat>
     </random_genome_fragmentation>
     <calculatePosition>
-      <use_calculate>TRUE</use_calculate>
+      <use_calculate>FALSE</use_calculate>
       <alignment_path>C:/Users/David/Desktop/SimRadOptions/output/alignment_sequences/</alignment_path>
       <gffFile>C:/Users/David/Desktop/SimRadOptions/vitis_ncbi_annotations_on_12X_V2.gff3</gffFile>
       <outputPath>C:/Users/David/Desktop/SimRadOptions/output/mapping_results</outputPath>

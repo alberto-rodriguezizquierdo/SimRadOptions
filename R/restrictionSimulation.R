@@ -247,7 +247,7 @@ restrictionSimulation <- function(configFile){
 #' @param min.size
 #' @param max.size
 
-graph_generator <- function(sequences, name_enzyme, min.size, max.size, configFile, nrepeat){
+graph_generator <- function(sequences, name_enzyme, min.size, max.size, configFile, nrepeat=NULL){
   
   if (!exists('nrepeat')){
     
@@ -278,39 +278,79 @@ graph_generator <- function(sequences, name_enzyme, min.size, max.size, configFi
     dir.create(dirOutput)
     
   }
-  
-  tiff(filename=paste0(dirOutput, '/', name_enzyme,nrepeat,'_histogram.tiff'), units= 'in', width=5, height= 5, res=300)
-  
-  bk <- hist(width(sequences), breaks = length(sequences)/20, 
-             plot = FALSE)$breaks
-  
-  hist(width(sequences), 
-       border = "grey75", 
-       col = "grey75", 
-       breaks = bk,
-       main = name_enzyme, 
-       xlab = "Locus size (bp)", 
-       ylab = "Number of loci")
-  
-  hist(width(ssel), 
-       border = "red", 
-       col = "red", 
-       add = TRUE, 
-       breaks = bk)
-  
-  text(mean(c(min.size, max.size)), 
-       max(hist(width(ssel),breaks = bk, plot = FALSE)$counts), 
-       pos = 4, 
-       labels = paste(length(ssel)," loci between ", min.size, " and ", max.size, " bp", sep = ""), 
-       col = "red", 
-       cex = 0.9, 
-       font = 2)
-  
-  dev.off()
-  
-  
-  sequences_df <- data.frame(ssel)
-  sequences_df$ID <- seq.int(nrow(sequences_df))
-  
-  write.fasta(as.list(sequences_df$ssel), sequences_df$ID, file.out=paste0(dirOutput, '/', name_enzyme,nrepeat, '.fasta'))
+  if (!is.null(nrepeat)){
+    
+    tiff(filename=paste0(dirOutput, '/', name_enzyme,nrepeat,'_histogram.tiff'), units= 'in', width=5, height= 5, res=300)
+    
+    bk <- hist(width(sequences), breaks = length(sequences)/20, 
+               plot = FALSE)$breaks
+    
+    hist(width(sequences), 
+         border = "grey75", 
+         col = "grey75", 
+         breaks = bk,
+         main = name_enzyme, 
+         xlab = "Locus size (bp)", 
+         ylab = "Number of loci")
+    
+    hist(width(ssel), 
+         border = "red", 
+         col = "red", 
+         add = TRUE, 
+         breaks = bk)
+    
+    text(mean(c(min.size, max.size)), 
+         max(hist(width(ssel),breaks = bk, plot = FALSE)$counts), 
+         pos = 4, 
+         labels = paste(length(ssel)," loci between ", min.size, " and ", max.size, " bp", sep = ""), 
+         col = "red", 
+         cex = 0.9, 
+         font = 2)
+    
+    dev.off()
+    
+    
+    sequences_df <- data.frame(ssel)
+    sequences_df$ID <- seq.int(nrow(sequences_df))
+    
+    write.fasta(as.list(sequences_df$ssel), sequences_df$ID, file.out=paste0(dirOutput, '/', name_enzyme,nrepeat, '.fasta'))
+    
+  }else{
+    
+    tiff(filename=paste0(dirOutput, '/', name_enzyme,'_histogram.tiff'), units= 'in', width=5, height= 5, res=300)
+    
+    bk <- hist(width(sequences), breaks = length(sequences)/20, 
+               plot = FALSE)$breaks
+    
+    hist(width(sequences), 
+         border = "grey75", 
+         col = "grey75", 
+         breaks = bk,
+         main = name_enzyme, 
+         xlab = "Locus size (bp)", 
+         ylab = "Number of loci")
+    
+    hist(width(ssel), 
+         border = "red", 
+         col = "red", 
+         add = TRUE, 
+         breaks = bk)
+    
+    text(mean(c(min.size, max.size)), 
+         max(hist(width(ssel),breaks = bk, plot = FALSE)$counts), 
+         pos = 4, 
+         labels = paste(length(ssel)," loci between ", min.size, " and ", max.size, " bp", sep = ""), 
+         col = "red", 
+         cex = 0.9, 
+         font = 2)
+    
+    dev.off()
+    
+    
+    sequences_df <- data.frame(ssel)
+    sequences_df$ID <- seq.int(nrow(sequences_df))
+    
+    write.fasta(as.list(sequences_df$ssel), sequences_df$ID, file.out=paste0(dirOutput, '/', name_enzyme,'.fasta'))
+    
+  }
 }
