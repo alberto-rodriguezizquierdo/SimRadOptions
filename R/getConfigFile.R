@@ -115,6 +115,10 @@ getConfigFile <- function(root){
   
   ###-----------------------Validate Output--------------------###
   
+  validateUseOutput                      <- validateCharacter(configFile$output$use_output)
+  
+  configFile$output$use_output         <- validateUseOutput
+  
   validateOutput                      <- validateCharacter(configFile$output$outputDir)
   
   configFile$output$outputDir         <- validateOutput
@@ -190,7 +194,7 @@ nodesValidation <- function(configFile){
   
   calculatePositionNodes      <- c('use_calculate','alignment_path','gffFile','outputPath', 'category')
 
-  outputNodes                 <- c('outputDir')
+  outputNodes                 <- c('use_output','outputDir')
 
   #Validation principal nodes
 

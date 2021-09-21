@@ -5,28 +5,24 @@
 
 SimRADoptionsApp <- function(root){
 
-
-#  library(logging)
-
-#  logging::loginfo('####--------Starting app---------------####',logger = logs)
-
+  
   configFile <- getConfigFile(root)
 
-  if (isTRUE(configFile$parameters$finding_enzyme$use_finding)){
-    
-    resultsRestriction <- restrictionSimulation(configFile)
-    
-    outputGeneration(resultsRestriction,root, configFile)
-    
-  }
+  #########---------Restriction Enzyme simulation----------#########
   
-  if (isTRUE(configFile$parameters$combination$use_combination)){
-    
-    resultsRestriction <- restrictionSimulation(configFile)
-    
-    outputGeneration(resultsRestriction,root, configFile)
-    
-  }
+  resultsRestriction <- restrictionSimulation(dnaseq = paste0(configFile$data$dataPath,'/',configFile$data$genome), 
+                                              enzyme_db = paste0(configFile$data$dataPath,'/',configFile$data$enzyme_db), 
+                                              min.size = configFile$param$min.size, 
+                                              max.size = configFile$param$max.size, 
+                                              use_finding = configFile$parameters$finding_enzyme$use_finding, 
+                                              use_combination = configFile$parameters$combination$use_combination,
+                                              enzyme_selection = configFile$parameters$combination$enzyme_selection,
+                                              use_replicate = configFile$parameters$replicate_enzyme$use_replicate,
+                                              nb_repeat=configFile$parameters$replicate_enzyme$nb_repeat,
+                                              use_output = configFile$output$use_output,
+                                              outputDir = configFile$output$outputDir,
+                                              wd=root)
+
   
     
   if (isTRUE(configFile$parameters$random_genome_fragmentation$use_fragmentation)){

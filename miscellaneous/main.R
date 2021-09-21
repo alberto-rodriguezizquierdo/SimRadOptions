@@ -17,7 +17,7 @@ for (packages in libInstalling){
 
 
 #Setting Working directories
-root                  <- "C:/Users/David/Desktop/SimRadOptions/"
+root                  <- "C:/Users/aro312/OneDrive - University of Kentucky/Documents/SimRadOptions/"
 setwd(root)
 rDirectory            <- 'R/'
 myDirectoryR          <- paste0(root,rDirectory)

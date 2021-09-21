@@ -3,22 +3,43 @@
 #' @return results
 
 
-restrictionSimulation <- function(configFile){
-  
+
+
+restrictionSimulation <- function(dnaseq, 
+                                  enzyme_db, 
+                                  min.size, 
+                                  max.size, 
+                                  use_finding = NULL, 
+                                  use_combination = NULL,
+                                  enzyme_selection = NULL,
+                                  use_replicate = NULL,
+                                  nb_repeat=NULL,
+                                  use_output = NULL,
+                                  outputDir=NULL,
+                                  wd=NULL){
+  browser()
   #defining parameters
-  
-  dnaseq      <- paste0(configFile$data$dataPath,'/',configFile$data$genome)#'C:/Users/David/Downloads/VITVvi_vCabSauv08_v1.1.fasta'
-  
-  load(file = paste0(configFile$data$dataPath,'/',configFile$data$enzyme_db))
+#  
+##  dnaseq      <- paste0(configFile$data$dataPath,'/',configFile$data$genome)#'C:/Users/David/Downloads/VITVvi_vCabSauv08_v1.1.fasta'
+#  
+##  load(file = paste0(configFile$data$dataPath,'/',configFile$data$enzyme_db))
+#  
+
+  load(file=enzyme_db)
   
   enzyme.db   <- data.frame(lapply(enzyme.db, as.character), stringsAsFactors = FALSE)
   
-  min.size    <- configFile$param$min.size
+  root <- wd
   
-  max.size    <- configFile$param$max.size
+  configFile <- outputDir
+
+#  
+#  min.size    <- configFile$param$min.size
+#  
+#  max.size    <- configFile$param$max.size
   
   #Starting restriction simulation
-  if (isTRUE(configFile$parameters$finding_enzyme$use_finding)){
+  if (isTRUE(use_finding)){
     for (enzymes in 1:nrow(enzyme.db)){
       
       row <- enzyme.db[enzymes,]
@@ -29,9 +50,13 @@ restrictionSimulation <- function(configFile){
       
       eval(parse(text=paste0('size.select',row$enzyme,' <- size.select (simseq', row$enzyme,'.dig,min.size = min.size, max.size = max.size, graph = FALSE, verbose= TRUE)'))) 
       
-      if (eval(parse(text=paste0('!length(size.select', row$enzyme,') == 0')))){
+      if (isTRUE(use_output)){
         
-        eval(parse(text=paste0('graph_generator(simseq',row$enzyme,'.dig, row$enzyme, min.size, max.size, configFile)')))
+        if (eval(parse(text=paste0('!length(size.select', row$enzyme,') == 0')))){
+          
+          eval(parse(text=paste0('graph_generator(simseq',row$enzyme,'.dig, row$enzyme, min.size, max.size, configFile, root)')))
+          
+        }
         
       }
       
@@ -79,9 +104,13 @@ restrictionSimulation <- function(configFile){
     results[order(-results$Sel_digestions_count),]
     
     
-  }else if(isTRUE(configFile$parameters$combination$use_combination)){
+########--------------------Use Combination--------------------##########
     
-    for (x in configFile$parameters$combination$enzyme_selection){
+    
+    
+  }else if(isTRUE(use_combination)){
+    
+    for (x in enzyme_selection){
       
       if (exists('enzyme_selectiondb')==FALSE){
         
@@ -97,9 +126,9 @@ restrictionSimulation <- function(configFile){
       
     }
     
-    for (enzymes in configFile$parameters$combination$enzyme_selection){
+    for (enzymes in enzyme_selection){
       
-      for (enzymes_2 in configFile$parameters$combination$enzyme_selection){
+      for (enzymes_2 in enzyme_selection){
         
         if (!enzymes_2 == enzymes){
           
@@ -114,11 +143,13 @@ restrictionSimulation <- function(configFile){
           eval(parse(text=paste0('simseq', row1$enzyme,'vs', row2$enzyme,'.dig <- insilico.digest(ref.DNAseq(dnaseq), cut_site_5prime1="', sequences1,'", cut_site_3prime1="", cut_site_5prime2="', sequences2,'", cut_site_3prime2="", verbose=TRUE)')))
           
           eval(parse(text=paste0('size.select',row1$enzyme,'vs',row2$enzyme,' <- size.select (simseq', row1$enzyme,'vs',row2$enzyme,'.dig,min.size = min.size, max.size = max.size, graph = FALSE, verbose= TRUE)'))) 
-          
-          if (eval(parse(text=paste0('!length(size.select', row1$enzyme,'vs',row2$enzyme,') == 0')))){
+          if (isTRUE(use_output)){
             
-            eval(parse(text=paste0('graph_generator(simseq',row1$enzyme,'vs',row2$enzyme,'.dig, "', row1$enzyme,'vs', row2$enzyme,'", min.size, max.size, configFile)')))
-            
+            if (eval(parse(text=paste0('!length(size.select', row1$enzyme,'vs',row2$enzyme,') == 0')))){
+              
+              eval(parse(text=paste0('graph_generator(simseq',row1$enzyme,'vs',row2$enzyme,'.dig, "', row1$enzyme,'vs', row2$enzyme,'", min.size, max.size, configFile, root)')))
+              
+            }
           }
           
           
@@ -172,9 +203,13 @@ restrictionSimulation <- function(configFile){
     
     results[order(-results$Sel_digestions_count),]
     
-  }else if (isTRUE(configFile$parameters$replicate_enzyme$use_replicate)){
     
-    for(nrepeat in 1:configFile$parameters$replicate_enzyme$nb_repeat){
+#########-----------Use replicate------------##########
+    
+    
+  }else if (isTRUE(use_replicate)){
+    
+    for(nrepeat in 1:nb_repeat){
       
       enzymes <- configFile$parameters$replicate_enzyme$enzyme_selection
       
@@ -186,10 +221,14 @@ restrictionSimulation <- function(configFile){
       
       eval(parse(text=paste0('size.select',row$enzyme,' <- size.select (simseq', row$enzyme,'.dig,min.size = min.size, max.size = max.size, graph = FALSE, verbose= TRUE)'))) 
       
-      if (eval(parse(text=paste0('!length(size.select', row$enzyme,') == 0')))){
+      if (isTRUE(use_output)){
         
-        eval(parse(text=paste0('graph_generator(simseq',row$enzyme,'.dig, row$enzyme, min.size, max.size, configFile, nrepeat)')))
-        
+        if (eval(parse(text=paste0('!length(size.select', row$enzyme,') == 0')))){
+          
+          eval(parse(text=paste0('graph_generator(simseq',row$enzyme,'.dig, row$enzyme, min.size, max.size, configFile, root, nrepeat, use_replicate)')))
+          
+        }  
+      
       }
       
       #building exiting file
@@ -237,6 +276,12 @@ restrictionSimulation <- function(configFile){
     
     }
   
+  if (isTRUE(use_output)){
+    
+    outputGeneration(results,root)
+    
+  }
+  
   return(results)
 }
 
@@ -246,8 +291,14 @@ restrictionSimulation <- function(configFile){
 #' @param name_enzyme
 #' @param min.size
 #' @param max.size
+#' @param configFile
+#' @param nrepeat
+#' @param use_replicate
+#' 
+#' @author 2021, Rodriguez-Izquierdo, Alberto
+#' 
 
-graph_generator <- function(sequences, name_enzyme, min.size, max.size, configFile, nrepeat=NULL){
+graph_generator <- function(sequences, name_enzyme, min.size, max.size, configFile, root, nrepeat=NULL, use_replicate=NULL){
   
   if (!exists('nrepeat')){
     
@@ -257,11 +308,11 @@ graph_generator <- function(sequences, name_enzyme, min.size, max.size, configFi
   
   ssel <- sequences[width(sequences) < max.size & width(sequences) > min.size]
 
-  dirOutput <- paste0(root,'output/',configFile$output$outputDir,'/', name_enzyme)
+  dirOutput <- paste0(root,'output/',configFile,'/', name_enzyme)
   
-  if (!dir.exists(paste0(root,'output/',configFile$output$outputDir))){
+  if (!dir.exists(paste0(root,'output/',configFile))){
     
-    dir.create(paste0(root,'output/',configFile$output$outputDir))
+    dir.create(paste0(root,'output/',configFile))
     
     }
   
@@ -271,7 +322,7 @@ graph_generator <- function(sequences, name_enzyme, min.size, max.size, configFi
     
   }
   
-  if(!isTRUE(configFile$parameters$replicate_enzyme$use_replicate)){
+  if(!isTRUE(use_replicate)){
     
     unlink(dirOutput, recursive = TRUE)
     

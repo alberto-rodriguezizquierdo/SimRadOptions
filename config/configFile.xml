@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <generalParameters>
   <data>
-    <dataPath>C:/Users/David/Desktop/SimRADoptions/data</dataPath>
+    <dataPath>C:/Users/aro312/OneDrive - University of Kentucky/Documents/SimRadOptions/data/</dataPath>
     <genome>VITVvi_vCabSauv08_v1.1.fasta</genome>
     <enzyme_db>enzymeDb.rda</enzyme_db>
   </data>
@@ -35,6 +35,7 @@
     <max.size>260</max.size>
   </parameters>
   <output>
+    <use_output>TRUE</use_output>
     <outputDir>restriction</outputDir>
   </output>
 </generalParameters>
