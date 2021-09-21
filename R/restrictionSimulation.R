@@ -8,22 +8,14 @@
 restrictionSimulation <- function(dnaseq, 
                                   enzyme_db, 
                                   min.size, 
-                                  max.size, 
-                                  use_finding = NULL, 
-                                  use_combination = NULL,
+                                  max.size,
+                                  type_analysis,
                                   enzyme_selection = NULL,
-                                  use_replicate = NULL,
                                   nb_repeat=NULL,
                                   use_output = NULL,
                                   outputDir=NULL,
                                   wd=NULL){
   browser()
-  #defining parameters
-#  
-##  dnaseq      <- paste0(configFile$data$dataPath,'/',configFile$data$genome)#'C:/Users/David/Downloads/VITVvi_vCabSauv08_v1.1.fasta'
-#  
-##  load(file = paste0(configFile$data$dataPath,'/',configFile$data$enzyme_db))
-#  
 
   load(file=enzyme_db)
   
@@ -33,13 +25,8 @@ restrictionSimulation <- function(dnaseq,
   
   configFile <- outputDir
 
-#  
-#  min.size    <- configFile$param$min.size
-#  
-#  max.size    <- configFile$param$max.size
-  
   #Starting restriction simulation
-  if (isTRUE(use_finding)){
+  if (type_analysis == 'finding'){
     for (enzymes in 1:nrow(enzyme.db)){
       
       row <- enzyme.db[enzymes,]
@@ -108,7 +95,7 @@ restrictionSimulation <- function(dnaseq,
     
     
     
-  }else if(isTRUE(use_combination)){
+  }else if(type_analysis == 'combination'){
     
     for (x in enzyme_selection){
       
@@ -207,7 +194,7 @@ restrictionSimulation <- function(dnaseq,
 #########-----------Use replicate------------##########
     
     
-  }else if (isTRUE(use_replicate)){
+  }else if (type_analysis == 'replicate'){
     
     for(nrepeat in 1:nb_repeat){
       

@@ -7,25 +7,20 @@
   </data>
 
   <parameters>
-    <finding_enzyme>
-      <use_finding>FALSE</use_finding>
-    </finding_enzyme>
+    <typeAnalysis>restriction</typeAnalysis>
+    <ifRestriction>finding</ifRestriction>
     <combination>
-      <use_combination>TRUE</use_combination>
       <enzyme_selection>NsiI,Csp6I</enzyme_selection>
     </combination>
     <replicate_enzyme>
-      <use_replicate>FALSE</use_replicate>
       <enzyme_selection>NsiI</enzyme_selection>
       <nb_repeat>10</nb_repeat>
     </replicate_enzyme>
     <random_genome_fragmentation>
-      <use_random>FALSE</use_random>
       <nb_fragments>70000</nb_fragments>
       <nb_repeat>10</nb_repeat>
     </random_genome_fragmentation>
     <calculatePosition>
-      <use_calculate>FALSE</use_calculate>
       <alignment_path>C:/Users/David/Desktop/SimRadOptions/output/alignment_sequences/</alignment_path>
       <gffFile>C:/Users/David/Desktop/SimRadOptions/vitis_ncbi_annotations_on_12X_V2.gff3</gffFile>
       <outputPath>C:/Users/David/Desktop/SimRadOptions/output/mapping_results</outputPath>

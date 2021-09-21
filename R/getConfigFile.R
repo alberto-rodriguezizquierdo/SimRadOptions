@@ -47,14 +47,14 @@ getConfigFile <- function(root){
   
   ###----------------------Validation parameters---------------###
 
-  validateUseFinding                                                <- validateCharacter(configFile$parameters$finding_enzyme$use_finding)
-        
-  configFile$parameters$finding_enzyme$use_finding                  <- validateUseFinding
-        
-  validateUseCombination                                            <- validateCharacter(configFile$parameters$combination$use_combination)
-        
-  configFile$parameters$combination$use_combination                 <- validateUseCombination
-        
+  validateTypeAnalysis                                              <- validateCharacter(configFile$parameters$typeAnalysis)
+  
+  configFile$parameters$typeAnalysis                                <- validateTypeAnalysis
+  
+  validateIfRestriction                                             <- validateCharacter(configFile$parameters$ifRestriction)
+  
+  configFile$parameters$ifRestriction                               <- validateIfRestriction
+  
   validateEnzymeSelection                                           <- validateCharacter(configFile$parameters$combination$enzyme_selection)
         
   validateEnzymeSelection                                           <- unlist(strsplit(validateEnzymeSelection, ','))
@@ -72,10 +72,6 @@ getConfigFile <- function(root){
   validateRepEnzymeNb                                               <- validateNumber(configFile$parameters$replicate_enzyme$nb_repeat)
   
   configFile$parameters$replicate_enzyme$nb_repeat                  <- validateRepEnzymeNb
-  
-  validateRandomUse                                                 <- validateCharacter(configFile$parameters$random_genome_fragmentation$use_random)
-  
-  configFile$parameters$random_genome_fragmentation$use_random      <- validateRandomUse
   
   validateRandomNb                                                  <- validateNumber(configFile$parameters$random_genome_fragmentation$nb_fragments)
   
@@ -176,7 +172,8 @@ nodesValidation <- function(configFile){
 
   dataNodes                   <- c('dataPath','genome', 'enzyme_db')
 
-  parametersNodes             <- c('finding_enzyme',
+  parametersNodes             <- c('typeAnalysis',
+                                   'ifRestriction',
                                    'combination',
                                    'replicate_enzyme',
                                    'random_genome_fragmentation',
@@ -184,15 +181,13 @@ nodesValidation <- function(configFile){
                                    'max.size', 
                                    'min.size')
   
-  findingNodes                <- c('use_finding')
+  combinationNodes            <- c('enzyme_selection')
   
-  combinationNodes            <- c('use_combination', 'enzyme_selection')
+  replicateNodes              <- c('enzyme_selection', 'nb_repeat')
   
-  replicateNodes              <- c('use_replicate', 'enzyme_selection', 'nb_repeat')
+  randomGenNodes              <- c('nb_fragments', 'nb_repeat')
   
-  randomGenNodes              <- c('use_random', 'nb_fragments', 'nb_repeat')
-  
-  calculatePositionNodes      <- c('use_calculate','alignment_path','gffFile','outputPath', 'category')
+  calculatePositionNodes      <- c('alignment_path','gffFile','outputPath', 'category')
 
   outputNodes                 <- c('use_output','outputDir')
 
@@ -203,8 +198,6 @@ nodesValidation <- function(configFile){
   ValDataNodes                  <- validateConfigNodes(dataNodes, configFile$data)
 
   ValParametersNodes            <- validateConfigNodes(parametersNodes, configFile$parameters)
-  
-  ValfindingNodes               <- validateConfigNodes(findingNodes, configFile$parameters$finding_enzyme)
 
   ValCombinationNodes           <- validateConfigNodes(combinationNodes, configFile$parameters$combination)
   
