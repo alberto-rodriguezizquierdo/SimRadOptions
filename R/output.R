@@ -8,7 +8,7 @@
 #'
 
 
-outputGeneration <- function(results,root, configFile){
+outputGeneration <- function(results,root){
   
   dirOutput         <- paste0(root, 'output/results/')
   

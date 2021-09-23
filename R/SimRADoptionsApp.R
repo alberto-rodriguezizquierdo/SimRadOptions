@@ -42,7 +42,7 @@ SimRADoptionsApp <- function(root){
     
   }
   
-  if(configFile$parameters$typeAnalysis == 'position'){
+  if (configFile$parameters$typeAnalysis == 'position'){
     
     calculatePositionFragment(count_dir=configFile$parameters$calculatePosition$outputPath,
                               alignment_path=configFile$parameters$calculatePosition$alignment_path,

@@ -9,17 +9,13 @@
 
 calculatePositionFragment <- function(count_dir, alignment_path, gffPath, category){
   
-  gfffile <- read.table(gffPath, skip=9, header=FALSE, col.names =paste0('V',seq_len(13)), fill=TRUE)
+  gfffile <- read_gff(gffPath)
   
   ##selection gene rows in gff
   
   dirs_alignment <- list.dirs(path = alignment_path, full.names = FALSE)
   
-  genes <- filter(gfffile, V3 == category)
-  
-  genes$V4 <- as.numeric(genes$V4)
-  
-  genes$V5 <- as.numeric(genes$V5)
+  genes <- filter(gfffile, type == category)
   
   for(SAMPLE in dirs_alignment){
     
@@ -47,21 +43,7 @@ calculatePositionFragment <- function(count_dir, alignment_path, gffPath, catego
           
         }
       
-    
-    
-#      gfffile <- read.table(gffPath, skip=9, header=FALSE, col.names =paste0('V',seq_len(13)), fill=TRUE)
-#  
-#    
-#      ##selection gene rows in gff
-#  
-#    
-#      genes <- filter(gfffile, V3 == category)
-#  
-#    
-#      genes$V4 <- as.numeric(genes$V4)
-#  
-#    
-#      genes$V5 <- as.numeric(genes$V5)
+
   
     ##Finding positions inside and outside the genes
       print('###---------------Calculating Fragments--------------###')
@@ -114,15 +96,15 @@ calculatePositionFragment <- function(count_dir, alignment_path, gffPath, catego
       
       for (genesselection in 1:nrow(identifiedGenes)){
         
-        chrselected <- filter(genes, V1 == identifiedGenes$chrpos[genesselection])
+        chrselected <- filter(genes, seqid == identifiedGenes$chrpos[genesselection])
        
-        value_finding <- filter(genes, V4 == chrselected$V4[which.min(abs(chrselected$V4 - identifiedGenes$positionFragmentInit[genesselection]))])
+        value_finding <- filter(genes, start == chrselected$V4[which.min(abs(chrselected$start - identifiedGenes$positionFragmentInit[genesselection]))])
        
-        if(value_finding$V7 == '+'){
+        if(value_finding$strand == '+'){
          
-           if(identifiedGenes$positionFragmentInit[genesselection] < value_finding$V4){
+           if(identifiedGenes$positionFragmentInit[genesselection] < value_finding$start){
            
-              promotor <- value_finding$V4 - 1000
+              promotor <- value_finding$start - 1000
            
               if(identifiedGenes$positionFragmentFinal[genesselection] < promotor){
              
@@ -134,9 +116,9 @@ calculatePositionFragment <- function(count_dir, alignment_path, gffPath, catego
            
                   }
            
-              }else if(identifiedGenes$positionFragmentFinal[genesselection] > value_finding$V5){
+              }else if(identifiedGenes$positionFragmentFinal[genesselection] > value_finding$end){
            
-                if (identifiedGenes$positionFragmentFinal[genesselection] > value_finding$V5){
+                if (identifiedGenes$positionFragmentFinal[genesselection] > value_finding$end){
              
                   value <- 'Outside gene'
            
@@ -154,9 +136,9 @@ calculatePositionFragment <- function(count_dir, alignment_path, gffPath, catego
          
           }else{
          
-            if(identifiedGenes$positionFragmentInit[genesselection] > value_finding$V5){
+            if(identifiedGenes$positionFragmentInit[genesselection] > value_finding$end){
            
-              promotor <- value_finding$V4 + 1000
+              promotor <- value_finding$start + 1000
            
               if(identifiedGenes$positionFragmentInit[genesselection] > promotor){
              
@@ -168,9 +150,9 @@ calculatePositionFragment <- function(count_dir, alignment_path, gffPath, catego
            
                   }
            
-              }else if(identifiedGenes$positionFragmentInit[genesselection] < value_finding$V4){
+              }else if(identifiedGenes$positionFragmentInit[genesselection] < value_finding$start){
            
-                if (identifiedGenes$positionFragmentFinal[genesselection] < value_finding$V4){
+                if (identifiedGenes$positionFragmentFinal[genesselection] < value_finding$start){
              
                   value <- 'Outside gene'
              

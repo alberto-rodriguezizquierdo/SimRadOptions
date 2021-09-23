@@ -27,6 +27,9 @@ restrictionSimulation <- function(dnaseq,
 
   #Starting restriction simulation
   if (type_analysis == 'finding'){
+    
+    print('#########------------Finding the best enzyme----------########')
+    
     for (enzymes in 1:nrow(enzyme.db)){
       
       row <- enzyme.db[enzymes,]
@@ -96,6 +99,8 @@ restrictionSimulation <- function(dnaseq,
     
     
   }else if(type_analysis == 'combination'){
+    
+    print('#########------------Combination of restriction enzymes----------########')
     
     for (x in enzyme_selection){
       
@@ -195,6 +200,8 @@ restrictionSimulation <- function(dnaseq,
     
     
   }else if (type_analysis == 'replicate'){
+    
+    print('#########------------Replication restriction selecting enzymes----------########')
     
     for(nrepeat in 1:nb_repeat){
       
